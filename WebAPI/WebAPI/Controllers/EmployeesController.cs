@@ -1,5 +1,6 @@
 ﻿using Microsoft.AspNetCore.Mvc;
 using WebAPI.Data;
+using WebAPI.Models;
 using WebAPI.Models.Entities;
 
 namespace WebAPI.Controllers
@@ -32,6 +33,82 @@ namespace WebAPI.Controllers
             var allEmployee = query.ToList();
 
             return Ok(new { employees = allEmployee, totalPages = totalPage });
+        }
+
+        [HttpGet]
+        [Route("{id:int}")]
+        public IActionResult GetEmployeeById(int id)
+        {
+            var employee = employeeDb.Employees.Find(id);
+
+            if (employee == null)
+            {
+                return NotFound();
+            }
+
+            return Ok(employee);
+
+        }
+
+        [HttpPost]
+        public IActionResult AddEmployee(AddEmployeeDto addEmployeeDto)
+        {
+            var employeeData = new Employee()
+            {
+                Name = addEmployeeDto.Name,
+                Email = addEmployeeDto.Email,
+                Department = addEmployeeDto.Department,
+                Phone = addEmployeeDto.Phone,
+                Profession = addEmployeeDto.Profession,
+
+            };
+
+            employeeDb.Employees.Add(employeeData);
+            employeeDb.SaveChanges();
+
+            return Ok(employeeData);
+        }
+
+        [HttpPut]
+        [Route("{id:int}")]
+        public IActionResult UpdateEmployee(int id, UpdateEmployeeDto updateEmployeeDto)
+        {
+            var employee = employeeDb.Employees.Find(id);
+
+            if (employee == null)
+            {
+                return NotFound();
+            }
+
+            employee.Name = updateEmployeeDto.Name;
+            employee.Email = updateEmployeeDto.Email;
+            employee.Department = updateEmployeeDto.Department;
+            employee.Phone = updateEmployeeDto.Phone;
+            employee.Salary = updateEmployeeDto.Salary;
+            employee.Profession = updateEmployeeDto.Profession;
+
+
+            employeeDb.Employees.Update(employee);
+
+            return Ok(employee);
+        }
+
+        [HttpDelete]
+        [Route("{id:int}")]
+        public IActionResult DeleteEmployee(int id)
+        {
+            var employee = employeeDb.Employees.Find(id);
+
+            if (employee == null)
+            {
+                return NotFound();
+            }
+
+            employeeDb.Employees.Remove(employee);
+            employeeDb.SaveChanges();
+
+            return Ok();
+
         }
     }
 }
