@@ -1,0 +1,14 @@
+.vs/
+.vscode/
+
+bin/
+obj/
+
+*.user
+*.suo
+
+*.log
+
+node_modules/
+
+npm-debug

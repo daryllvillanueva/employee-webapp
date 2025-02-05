@@ -570,3 +570,4 @@ C:\Users\daryl\OneDrive\Desktop\react-webapi - Copy\WebAPI\WebAPI\obj\Debug\net8
 C:\Users\daryl\OneDrive\Desktop\react-webapi - Copy\WebAPI\WebAPI\obj\Debug\net8.0\WebAPI.pdb
 C:\Users\daryl\OneDrive\Desktop\react-webapi - Copy\WebAPI\WebAPI\obj\Debug\net8.0\WebAPI.genruntimeconfig.cache
 C:\Users\daryl\OneDrive\Desktop\react-webapi - Copy\WebAPI\WebAPI\obj\Debug\net8.0\ref\WebAPI.dll
+C:\Users\daryl\OneDrive\Desktop\react-webapi\WebAPI\WebAPI\obj\Debug\net8.0\WebAPI.sourcelink.json

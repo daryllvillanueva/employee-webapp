@@ -10,5 +10,6 @@ namespace WebAPI.Data
 
         }
         public DbSet<Employee> Employees { get; set; }
+
     }
 }
