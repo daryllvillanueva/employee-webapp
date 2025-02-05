@@ -1,11 +1,15 @@
 .vs/
 .vscode/
+*.user
+*.suo
+*.futdcache.v2
 
 bin/
 obj/
-
-*.user
-*.suo
+*.dll
+*.exe
+*.pdb
+*.cache
 
 *.log
 

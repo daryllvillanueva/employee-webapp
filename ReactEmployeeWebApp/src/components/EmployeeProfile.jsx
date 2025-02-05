@@ -1,12 +1,12 @@
 import React from 'react'
 import PageLayout from './partials/PageLayout'
 
-const Employees = () => {
+const EmployeeProfile = () => {
   return (
     <PageLayout>
-      
+        
     </PageLayout>
   )
 }
 
-export default Employees
+export default EmployeeProfile

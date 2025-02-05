@@ -60,13 +60,15 @@ namespace WebAPI.Controllers
                 Department = addEmployeeDto.Department,
                 Phone = addEmployeeDto.Phone,
                 Profession = addEmployeeDto.Profession,
-
+                CreatedAt = DateTime.Now,
             };
+
+            var formattedCreatedAt = employeeData.CreatedAt.ToString("MMMM dd, yyyy");
 
             employeeDb.Employees.Add(employeeData);
             employeeDb.SaveChanges();
 
-            return Ok(employeeData);
+            return Ok(new { id = employeeData.Id, name = employeeData.Name, email = employeeData.Email, createdAt = formattedCreatedAt});
         }
 
         [HttpPut]

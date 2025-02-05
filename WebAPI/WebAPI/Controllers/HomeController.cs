@@ -20,9 +20,11 @@ namespace WebAPI.Controllers
         [HttpGet]
         public IActionResult PreviewEmployees()
         {
-            var preview = employeeDb.Employees.FromSqlRaw("EXEC GetTop5EmployeesByName").ToList(); 
+            var query = employeeDb.Employees.FromSqlRaw("EXEC GetTop5EmployeesByName");
 
-            return Ok(preview);
+            var preview = query.ToList();
+
+            return Ok(new { employees = preview });
         }
 
     }

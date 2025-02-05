@@ -1,10 +1,22 @@
-import React from 'react'
+import React, { useEffect, useState } from 'react'
 import { Button } from '../ui/button';
 import { BsSun } from "react-icons/bs";
 import { Link, useLocation } from 'react-router-dom';
 
-const Header = ({isToggled, handleToggled}) => {
+const Header = () => {
   const location = useLocation();
+  const [isToggled, setIsToggled] = useState(false);
+  const handleToggled = () => {
+    setIsToggled(!isToggled);
+  };
+
+  useEffect(() => {
+    if (isToggled) {
+      document.body.classList.add('dark');
+    } else {
+      document.body.classList.remove('dark');
+    }
+  }, [isToggled]);
 
   return (
     <header className='fixed top-0 left-0 w-screen z-20 h-16 flex items-center justify-center border-b bg-card padding'>
