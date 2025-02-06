@@ -1,8 +1,11 @@
 import React from 'react'
+import PageLayout from './partials/PageLayout'
 
 const EmployeeEditForm = () => {
   return (
-    <div>EmployeeEditForm</div>
+    <PageLayout>
+      
+    </PageLayout>
   )
 }
 

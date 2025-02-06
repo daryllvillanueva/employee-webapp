@@ -27,6 +27,7 @@ import {
 import { MoreVertical } from "lucide-react";
 import { MdEmail } from "react-icons/md";
 import { BiSolidPhone } from "react-icons/bi";
+import { deleteEmployee, previewEmployees } from './employeeApi';
 
 const Home = () => {
   const [employee, setEmployee] = useState([]);
@@ -38,16 +39,9 @@ const Home = () => {
   useEffect(() => {
     const fetchEmployee = async () => {
       try {
-        const response = await fetch("https://localhost:7111/Home", {
-          method: 'GET'
-        });
-        if (!response.ok) {
-          throw new Error(`Failed to fetch employees. Status: ${response.status}`);
-        }
-        const data = await response.json();
+        const data = await previewEmployees();
         setEmployee(data.employees || []); 
-      } 
-      catch (error) {
+      } catch (error) {
         setError("The backend is down, Please try again later.");
       }
     };
@@ -55,29 +49,28 @@ const Home = () => {
   }, []);
   
   const handleDeleteClick = (id) => {
-    setDeleteId(id);
+    setDeleteId(id);  // Set deleteId when opening the modal
     setOpen(true); 
   };
-
+  
   const handleCloseModal = () => {
     setOpen(false);  
   };
-
-  const handleDelete = async (id) => {
-    if (!deleteId) return;
-
+  
+  const handleDelete = async () => {
+    if (!deleteId) return; 
+    
     try {
-      const response = await fetch(`https://localhost:7111/Employees/${deleteId}`, {
-        method: 'DELETE',
-      });
-
-      if (!response.ok) {
-        throw new Error(`Failed to delete employee. Status: ${response.status}`);
-      }
-
-      setEmployee((prevEmployees) => prevEmployees.filter((emp) => emp.id !== id));
-
+      const response = await deleteEmployee(deleteId);
+      
+      setEmployee((prevEmployees) => prevEmployees.filter((emp) => emp.id !== deleteId));
       handleCloseModal();
+
+      if (response.ok) {
+        const data = await previewEmployees();
+        setEmployee(data.employees || []);
+        handleCloseModal();  
+      }
 
     } catch (error) {
       console.error("Error deleting employee:", error);
@@ -89,6 +82,7 @@ const Home = () => {
   const handleEditClick = (id) => {
     navigate(`/employees/${id}/edit`);
   };
+  
 
   return (
     <PageLayout>

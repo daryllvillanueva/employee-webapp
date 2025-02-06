@@ -5,6 +5,7 @@ import PageNotFound from "./components/partials/PageNotFound";
 import Employees from "./components/Employees";
 import EmployeeProfile from "./components/EmployeeProfile";
 import EmployeeEditForm from './components/EmployeeEditForm';
+import EmployeeCreateForm from './components/EmployeeCreateForm';
 
 function App() {
   return (
@@ -13,8 +14,9 @@ function App() {
         <Route path="/" element={<Home />}/>
         <Route path="/employees" element={<Employees />}/>
         <Route path="/employees/:id" element={<EmployeeProfile />}/>
-        <Route path="/employees/:id/edit" element={<EmployeeEditForm/>}/>
-        <Route path="*" element={<PageNotFound/>}/>
+        <Route path="/employees/:id/edit" element={<EmployeeEditForm />} />
+        <Route path="/employees/create" element={<EmployeeCreateForm />} />
+        <Route path="*" element={<PageNotFound />}/>
       </Routes>
     </Router>
   )
