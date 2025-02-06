@@ -22,13 +22,13 @@ const Header = () => {
     <header className='fixed top-0 left-0 w-screen z-20 h-16 flex items-center justify-center border-b bg-card padding'>
         <nav className='flex items-center gap-3 text-md list-none'>
           <Link to="/"
-            className={`p-3 rounded-lg ${location.pathname === '/' ? 'text-blue-600' 
+            className={`p-3 rounded-lg ${location.pathname === '/' ? 'text-blue-600 font-semibold' 
             : 'text-black dark:text-white hover:bg-accent hover:text-accent-foreground'}`}
             onClick={() => handleClick('home')}>
             Home
           </Link>
           <Link to="/employees"
-            className={`p-3 rounded-lg ${location.pathname === '/employees' ? 'text-blue-600' 
+            className={`p-3 rounded-lg ${location.pathname === '/employees' ? 'text-blue-600 font-semibold' 
             : 'text-black dark:text-white hover:bg-accent hover:text-accent-foreground'}`} 
             onClick={() => handleClick('employees')}>
             Employees
