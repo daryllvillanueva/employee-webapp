@@ -73,19 +73,24 @@ export const updateEmployee = async (id, employeeData) => {
       Phone: employeeData.phone,
       Department: employeeData.department,
       Profession: employeeData.profession,
-      Salary: employeeData.salary || "", 
+      Salary: employeeData.salary,
     });
 
-    console.log('Sending data to API:', employeeData); // Log the data being sent
-    const response = await fetch(`${API_URL}/${id}`, {
+    const response = await fetch(`https://localhost:7111/Employees/${id}?${queryParams}`, {
       method: 'PUT',
-      headers: { 'Content-Type': 'application/json' },
+      headers: {
+        'Content-Type': 'application/json', // Ensure the content type is application/json
+      },
+      body: JSON.stringify(employeeData), // Send the employee data as JSON
     });
+
     if (!response.ok) {
-      const errorResponse = await response.json();
-      console.error('Error response from server:', errorResponse.errors);
-      throw new Error(`Failed to update employee. Status: ${response.status}`);
+      // If not 2xx, throw an error with response body
+      const errorDetails = await response.json();
+      console.error("Error details from server:", errorDetails);
+      throw new Error("Failed to update employee data.");
     }
+
     return await response.json();
   } catch (error) {
     console.error("Error updating employee:", error);
@@ -93,17 +98,18 @@ export const updateEmployee = async (id, employeeData) => {
   }
 };
 
+
 export const employeeProfile = async (id) => {
-    try {
-      const response = await fetch(`${API_URL}/${id}`, {
-        method: 'GET',
-      });
-      if (!response.ok) {
-        throw new Error(`Failed to get employee. Status: ${response.status}`);
-      }
-      return await response.json();
-    } catch (error) {
-      console.error("Error getting employee:", error);
-      throw error;
+  try {
+    const response = await fetch(`${API_URL}/${id}`, {
+      method: 'GET',
+    });
+    if (!response.ok) {
+      throw new Error(`Failed to get employee. Status: ${response.status}`);
     }
-  };
+    return await response.json();
+  } catch (error) {
+    console.error("Error getting employee:", error);
+    throw error;
+  }
+};

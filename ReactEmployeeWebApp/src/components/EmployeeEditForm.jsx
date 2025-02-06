@@ -6,8 +6,8 @@ import { Input } from './ui/input';
 import { Button } from './ui/user';
 
 const EmployeeEditForm = () => {
-  const { id } = useParams(); // Get employee ID from URL params
-  const navigate = useNavigate(); // To navigate after form submission
+  const { id } = useParams(); 
+  const navigate = useNavigate();
   const [error, setError] = useState(null);
 
   const [employeeData, setEmployeeData] = useState({
@@ -16,7 +16,7 @@ const EmployeeEditForm = () => {
     phone: '',
     profession: '',
     department: '',
-    salary: '',
+    salary: 0,
   });
 
   // Fetch employee data on mount
@@ -35,28 +35,49 @@ const EmployeeEditForm = () => {
     }
   }, [id]);
 
-  // Handle form field changes
   const handleInputChange = (e) => {
     const { name, value } = e.target;
+    
+    // Special handling for salary field to ensure it's a number
+    if (name === 'salary') {
+      setEmployeeData((prevData) => ({
+        ...prevData,
+        [name]: parseFloat(value) || 0, // Convert to a number or default to 0
+      }));
+    } else {
+      setEmployeeData((prevData) => ({
+        ...prevData,
+        [name]: value,
+      }));
+    }
+  };
+  
+
+  const handleSalaryChange = (e) => {
+    const { name, value } = e.target;
+    const salaryValue = parseFloat(value).toFixed(2);
     setEmployeeData((prevData) => ({
       ...prevData,
-      [name]: value, // Update the state with the new value for the corresponding field
+      [name]: salaryValue,  // Keep salary as a number
     }));
   };
-
-  // Handle form submission
+  
+  
+  
   const handleSubmit = async (e) => {
     e.preventDefault();
+    console.log("Sending data to API:", employeeData); // Check the request body here
     try {
-      const updatedData = await updateEmployee(id, employeeData); // Send updated data to API
+      const updatedData = await updateEmployee(id, employeeData); 
       if (updatedData) {
-        navigate(`/employees/${id}`); // Redirect to the employee's profile page
+        navigate(`/employees/${id}`);
       }
     } catch (error) {
       setError("Failed to update employee data.");
+      console.error("Update error:", error);
     }
   };
-
+  
   return (
     <PageLayout>
       <section className='max-w-md w-full mx-auto p-5 border shadow-lg rounded-lg border-gray-200 dark:border-gray-700'>
@@ -116,9 +137,9 @@ const EmployeeEditForm = () => {
             <label>Salary</label>
             <Input
               type="number"
-              name="department"
+              name="salary"
               value={employeeData.salary}
-              onChange={handleInputChange}
+              onChange={(e) => handleSalaryChange(e)}
               required
             />
           </div>

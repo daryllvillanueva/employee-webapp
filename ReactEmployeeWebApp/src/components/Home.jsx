@@ -86,7 +86,7 @@ const Home = () => {
 
   return (
     <PageLayout>
-      <section className="grid grid-cols-1 xs:grid-cols-2 lg:grid-cols-3 gap-4 p-2">
+      <section className="grid grid-cols-1 xs:grid-cols-2 lg:grid-cols-3 gap-4 p-2 max-w-6xl">
         {employee.length === 0 ? (
           <div className="flex flex-col justify-center items-center col-span-full gap-5">
             <p className="text-center text-2xl text-gray-500">No employees found.</p>
@@ -94,7 +94,7 @@ const Home = () => {
           </div>
         ) : (
           employee.map((employees) => (
-            <Card key={employees.id} className="shadow-lg rounded-lg border border-gray-200 dark:border-gray-700 max-w-xs">
+            <Card key={employees.id} className="shadow-lg rounded-lg border border-gray-200 dark:border-gray-700">
               <div className="h-44 relative bg-gray-200 p-4 rounded-t-lg flex flex-col gap-2 dark:bg-slate-800 items-center">
                 <div className="absolute top-3 right-3">
                   <DropdownMenu modal={false}>
@@ -141,7 +141,7 @@ const Home = () => {
                     </p>
                   </div>
                   <Link to={`/employees/${employees.id}`}>
-                    <Button variant="outline" size="md">View Profile</Button>
+                    <Button variant="outline" size="default">View Profile</Button>
                   </Link>
                 </div>
                 
@@ -154,7 +154,7 @@ const Home = () => {
         (
           <div className="mx-auto mt-4">
             <Link to="/employees">
-              <Button variant="default" size="default">View All Employees</Button>
+              <Button variant="default" size="lg">View All Employees</Button>
             </Link>
           </div>
         ) : ( null )
