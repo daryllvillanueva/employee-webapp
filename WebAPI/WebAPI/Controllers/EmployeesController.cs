@@ -1,4 +1,5 @@
 ﻿using Microsoft.AspNetCore.Mvc;
+using Microsoft.EntityFrameworkCore;
 using WebAPI.Data;
 using WebAPI.Models;
 using WebAPI.Models.Entities;
@@ -17,7 +18,7 @@ namespace WebAPI.Controllers
         }
 
         [HttpGet]
-        public IActionResult GetAllEmployees(int page = 1, int pageSize = 5)
+        public IActionResult GetAllEmployees(int page = 1, int pageSize = 6)
         {
             IQueryable<Employee> query = employeeDb.Employees;
 
@@ -73,9 +74,14 @@ namespace WebAPI.Controllers
 
         [HttpPut]
         [Route("{id:int}")]
-        public IActionResult UpdateEmployee(int id, UpdateEmployeeDto updateEmployeeDto)
+        public async Task<IActionResult> UpdateEmployee(int id, UpdateEmployeeDto updateEmployeeDto)
         {
-            var employee = employeeDb.Employees.Find(id);
+            if(!ModelState.IsValid)
+            {
+                return BadRequest(ModelState);
+            }
+
+            var employee = await employeeDb.Employees.FindAsync(id);
 
             if (employee == null)
             {
@@ -84,16 +90,17 @@ namespace WebAPI.Controllers
 
             employee.Name = updateEmployeeDto.Name;
             employee.Email = updateEmployeeDto.Email;
-            employee.Department = updateEmployeeDto.Department;
             employee.Phone = updateEmployeeDto.Phone;
-            employee.Salary = updateEmployeeDto.Salary;
+            employee.Department = updateEmployeeDto.Department;
             employee.Profession = updateEmployeeDto.Profession;
-
+            employee.Salary = updateEmployeeDto.Salary;
 
             employeeDb.Employees.Update(employee);
+            await employeeDb.SaveChangesAsync(); 
 
             return Ok(employee);
         }
+
 
         [HttpDelete]
         [Route("{id:int}")]

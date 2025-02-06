@@ -3,6 +3,18 @@ import { Link, useLocation, useNavigate } from 'react-router-dom';
 import { format } from 'date-fns';
 import PageLayout from './partials/PageLayout';
 import { Pagination, PaginationItem, PaginationLink, PaginationNext, PaginationPrevious, PaginationEllipsis } from "@/components/ui/pagination";
+import {  
+  AlertDialog,
+  AlertDialogAction,
+  AlertDialogCancel,
+  AlertDialogContent,
+  AlertDialogDescription,
+  AlertDialogFooter,
+  AlertDialogHeader,
+  AlertDialogTitle,
+  AlertDialogTrigger,
+} from "@/components/ui/alert-dialog";
+
 import {
   Card,
   CardContent,
@@ -24,13 +36,15 @@ const Employees = () => {
   const [employee, setEmployee] = useState([]); // Default as an empty array
   const [totalPages, setTotalPages] = useState(0);
   const [error, setError] = useState(null);
+  const [open, setOpen] = useState(false);
+  const [deleteId, setDeleteId] = useState(null);
 
   const location = useLocation();
   const navigate = useNavigate();
 
   const queryParams = new URLSearchParams(location.search);
   const pageIndex = parseInt(queryParams.get('page') || '1', 10);
-  const pageSize = 5;
+  const pageSize = 6;
 
   useEffect(() => {
     const fetchEmployee = async (page) => {
@@ -48,7 +62,7 @@ const Employees = () => {
       } 
       catch (error) {
         console.error("Error fetching data:", error);
-        setError("An error occurred. Please try again later.");
+        setError("The backend is down. Please try again later.");
       }
     };
 
@@ -64,7 +78,7 @@ const Employees = () => {
   };
 
   const renderPageNumbers = () => {
-    const pages = [];
+    const numPage = [];
     const maxPagesToShow = 5;
     let startPage = Math.max(1, pageIndex - Math.floor(maxPagesToShow / 2));
     let endPage = Math.min(totalPages, startPage + maxPagesToShow - 1);
@@ -74,7 +88,7 @@ const Employees = () => {
     }
   
     for (let i = startPage; i <= endPage; i++) {
-      pages.push(
+      numPage.push(
         <PaginationItem key={i}>
           <PaginationLink
             onClick={(e) => {
@@ -89,7 +103,38 @@ const Employees = () => {
       );
     }
   
-    return pages;
+    return numPage;
+  };
+
+  const handleDeleteClick = (id) => {
+    setDeleteId(id);
+    setOpen(true); 
+  };
+
+  const handleCloseModal = () => {
+    setOpen(false);  
+  };
+
+  const handleDelete = async (id) => {
+    if (!deleteId) return;
+
+    try {
+      const response = await fetch(`https://localhost:7111/Employees/${deleteId}`, {
+        method: 'DELETE',
+      });
+
+      if (!response.ok) {
+        throw new Error(`Failed to delete employee. Status: ${response.status}`);
+      }
+
+      setEmployee((prevEmployees) => prevEmployees.filter((emp) => emp.id !== id));
+
+      handleCloseModal();
+
+    } catch (error) {
+      setError("An error occurred while deleting the employee.");
+      handleCloseModal();
+    }
   };
 
   return (
@@ -105,13 +150,15 @@ const Employees = () => {
             <Card key={employees.id} className="shadow-lg rounded-lg border border-gray-200 dark:border-gray-700 max-w-xs">
               <div className="h-44 relative bg-gray-200 p-4 rounded-t-lg flex flex-col gap-2 dark:bg-slate-800 items-center">
                 <div className="absolute top-3 right-3">
-                  <DropdownMenu>
+                  <DropdownMenu modal={false}>
                     <DropdownMenuTrigger className="focus:outline-none">
                       <MoreVertical className="w-5 h-5 cursor-pointer" />
                     </DropdownMenuTrigger>
                     <DropdownMenuContent align="end">
-                      <DropdownMenuItem>Edit</DropdownMenuItem>
-                      <DropdownMenuItem>Delete</DropdownMenuItem>
+                      <DropdownMenuItem>
+                        <Link to={`/employees/${employee.id}/edit`}>Edit</Link>
+                      </DropdownMenuItem>
+                      <DropdownMenuItem onClick={() => handleDeleteClick(employees.id)}>Delete</DropdownMenuItem>
                     </DropdownMenuContent>
                   </DropdownMenu>
                 </div>
@@ -120,7 +167,7 @@ const Employees = () => {
                   <AvatarFallback>Profile</AvatarFallback>
                 </Avatar>
                 <h2 className="font-semibold text-lg">{employees.name}</h2>
-                <p className="text-md text-muted-foreground">Project Manager</p>
+                <p className="text-md text-muted-foreground">{employees.profession}</p>
               </div>
               <CardContent className="p-3">
                 <div className="flex gap-2 items-center justify-between mb-2">
@@ -182,7 +229,21 @@ const Employees = () => {
             </PaginationItem>
           </Pagination>
         ) : ( null )
-      }      
+      }
+      <AlertDialog open={open} onOpenChange={setOpen}>
+        <AlertDialogContent>
+          <AlertDialogHeader>
+            <AlertDialogTitle className="text-red-600 font-semibold text-xl">Are you really sure?</AlertDialogTitle>
+            <AlertDialogDescription className="text-left text-md">
+              This action cannot be undone. <br/>This will permanently delete the employee profile.
+            </AlertDialogDescription>
+          </AlertDialogHeader>
+          <AlertDialogFooter>
+            <AlertDialogCancel onClick={handleCloseModal}>Cancel</AlertDialogCancel>
+            <AlertDialogAction onClick={handleDelete}>Continue</AlertDialogAction>
+          </AlertDialogFooter>
+        </AlertDialogContent>
+      </AlertDialog>
     </PageLayout>
   )
 }

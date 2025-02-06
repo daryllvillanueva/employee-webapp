@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react';
-import { Link } from 'react-router-dom';
+import { Link, useNavigate  } from 'react-router-dom';
 import { format } from 'date-fns';
 import PageLayout from './partials/PageLayout';
 import {
@@ -33,6 +33,7 @@ const Home = () => {
   const [error, setError] = useState(null);
   const [open, setOpen] = useState(false);
   const [deleteId, setDeleteId] = useState(null);
+  const navigate = useNavigate();
 
   useEffect(() => {
     const fetchEmployee = async () => {
@@ -44,12 +45,10 @@ const Home = () => {
           throw new Error(`Failed to fetch employees. Status: ${response.status}`);
         }
         const data = await response.json();
-        console.log(data);
         setEmployee(data.employees || []); 
       } 
       catch (error) {
-        console.error("Error fetching data:", error);
-        setError("An error occurred. Please try again later.");
+        setError("The backend is down, Please try again later.");
       }
     };
     fetchEmployee();
@@ -87,6 +86,10 @@ const Home = () => {
     }
   };
   
+  const handleEditClick = (id) => {
+    navigate(`/employees/${id}/edit`);
+  };
+
   return (
     <PageLayout>
       <section className="grid grid-cols-1 xs:grid-cols-2 lg:grid-cols-3 gap-4 p-2">
@@ -105,7 +108,9 @@ const Home = () => {
                       <MoreVertical className="w-5 h-5 cursor-pointer" />
                     </DropdownMenuTrigger>
                     <DropdownMenuContent align="end">
-                      <DropdownMenuItem>Edit</DropdownMenuItem>
+                      <DropdownMenuItem onClick={() => handleEditClick(employees.id)}>
+                        Edit
+                      </DropdownMenuItem>
                       <DropdownMenuItem onClick={() => handleDeleteClick(employees.id)}>
                         Delete
                       </DropdownMenuItem>
@@ -117,7 +122,7 @@ const Home = () => {
                   <AvatarFallback>Profile</AvatarFallback>
                 </Avatar>
                 <h2 className="font-semibold text-lg">{employees.name}</h2>
-                <p className="text-md text-muted-foreground">Project Manager</p>
+                <p className="text-md text-muted-foreground">{employees.profession}</p>
               </div>
               <CardContent className="p-3">
                 <div className="flex gap-2 items-center justify-between mb-2">
@@ -163,9 +168,9 @@ const Home = () => {
       <AlertDialog open={open} onOpenChange={setOpen}>
         <AlertDialogContent>
           <AlertDialogHeader>
-            <AlertDialogTitle className="text-red-600 font-semibold">Are you really sure?</AlertDialogTitle>
-            <AlertDialogDescription>
-              This action cannot be undone. This will permanently delete the employee profile.
+            <AlertDialogTitle className="text-red-600 font-semibold text-xl">Are you really sure?</AlertDialogTitle>
+            <AlertDialogDescription className="text-left text-md">
+              This action cannot be undone. <br/>This will permanently delete the employee profile.
             </AlertDialogDescription>
           </AlertDialogHeader>
           <AlertDialogFooter>
