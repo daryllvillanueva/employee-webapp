@@ -15,7 +15,7 @@ namespace WebAPI.Models
         [Required(ErrorMessage = "Phone number is required.")]
         public required string Phone { get; set; }
 
-        [Required(ErrorMessage = "Department number is required.")]
+        [Required(ErrorMessage = "Department is required.")]
         public required string Department { get; set; }
 
         [Required(ErrorMessage = "Profession is required.")]

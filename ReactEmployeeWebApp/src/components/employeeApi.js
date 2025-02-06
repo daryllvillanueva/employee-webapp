@@ -67,12 +67,23 @@ export const createEmployee = async (employeeData) => {
 
 export const updateEmployee = async (id, employeeData) => {
   try {
+    const queryParams = new URLSearchParams({
+      Name: employeeData.name,
+      Email: employeeData.email,
+      Phone: employeeData.phone,
+      Department: employeeData.department,
+      Profession: employeeData.profession,
+      Salary: employeeData.salary || "", 
+    });
+
+    console.log('Sending data to API:', employeeData); // Log the data being sent
     const response = await fetch(`${API_URL}/${id}`, {
       method: 'PUT',
       headers: { 'Content-Type': 'application/json' },
-      body: JSON.stringify(employeeData),
     });
     if (!response.ok) {
+      const errorResponse = await response.json();
+      console.error('Error response from server:', errorResponse.errors);
       throw new Error(`Failed to update employee. Status: ${response.status}`);
     }
     return await response.json();
