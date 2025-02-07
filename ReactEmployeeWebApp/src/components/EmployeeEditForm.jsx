@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from 'react'; 
-import { useParams, useNavigate } from 'react-router-dom';
+import { useParams, useNavigate, Link } from 'react-router-dom';
 import PageLayout from './partials/PageLayout';
 import { employeeProfile, updateEmployee } from './employeeApi';
 import { Input } from './ui/input';
@@ -19,30 +19,27 @@ const EmployeeEditForm = () => {
     salary: 0,
   });
 
-  // Fetch employee data on mount
   useEffect(() => {
     const fetchEmployee = async () => {
       try {
-        const data = await employeeProfile(id); // Fetch employee profile using the ID
-        setEmployeeData(data); // Set data to form fields
+        const data = await employeeProfile(id); 
+        setEmployeeData(data); 
       } catch (error) {
         setError("Failed to load employee data.");
         throw error;
       }
     };
     if (id) {
-      fetchEmployee(); // Fetch data only if ID is present
+      fetchEmployee(); 
     }
   }, [id]);
 
   const handleInputChange = (e) => {
     const { name, value } = e.target;
-    
-    // Special handling for salary field to ensure it's a number
     if (name === 'salary') {
       setEmployeeData((prevData) => ({
         ...prevData,
-        [name]: parseFloat(value) || 0, // Convert to a number or default to 0
+        [name]: Number(parseFloat(value).toFixed(2)) || 0
       }));
     } else {
       setEmployeeData((prevData) => ({
@@ -52,21 +49,18 @@ const EmployeeEditForm = () => {
     }
   };
   
-
   const handleSalaryChange = (e) => {
     const { name, value } = e.target;
-    const salaryValue = parseFloat(value).toFixed(2);
+    const salaryValue = Number(parseFloat(value).toFixed(2));
     setEmployeeData((prevData) => ({
       ...prevData,
-      [name]: salaryValue,  // Keep salary as a number
+      [name]: salaryValue,
     }));
   };
   
-  
-  
   const handleSubmit = async (e) => {
     e.preventDefault();
-    console.log("Sending data to API:", employeeData); // Check the request body here
+    console.log("Sending data to API:", employeeData);
     try {
       const updatedData = await updateEmployee(id, employeeData); 
       if (updatedData) {
@@ -81,7 +75,12 @@ const EmployeeEditForm = () => {
   return (
     <PageLayout>
       <section className='max-w-md w-full mx-auto p-5 border shadow-lg rounded-lg border-gray-200 dark:border-gray-700'>
-        <h1 className='text-center text-2xl mb-3'>Edit Profile</h1>
+        <div className='flex justify-between mb-5'>
+          <h1 className='text-2xl'>Edit Profile</h1>
+          <Link to={`/employees/${employeeData.id}`}>
+            <Button variant="outline" size="default">View Profile</Button>
+          </Link>
+        </div>
         <form onSubmit={handleSubmit} className='space-y-3'>
           <div className="space-y-1">
             <label>Name</label>
@@ -140,6 +139,8 @@ const EmployeeEditForm = () => {
               name="salary"
               value={employeeData.salary}
               onChange={(e) => handleSalaryChange(e)}
+              step="0.01"
+              min="0"   
               required
             />
           </div>

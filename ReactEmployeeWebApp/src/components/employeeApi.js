@@ -50,7 +50,16 @@ export const deleteEmployee = async (id) => {
 
 export const createEmployee = async (employeeData) => {
   try {
-    const response = await fetch(API_URL, {
+    const queryParams = new URLSearchParams({
+      Name: employeeData.name,
+      Email: employeeData.email,
+      Phone: employeeData.phone,
+      Department: employeeData.department,
+      Profession: employeeData.profession,
+      Salary: employeeData.salary,
+    });
+
+    const response = await fetch(`${API_URL}?${queryParams}`, {
       method: 'POST',
       headers: { 'Content-Type': 'application/json' },
       body: JSON.stringify(employeeData),
@@ -76,19 +85,16 @@ export const updateEmployee = async (id, employeeData) => {
       Salary: employeeData.salary,
     });
 
-    const response = await fetch(`https://localhost:7111/Employees/${id}?${queryParams}`, {
+    const response = await fetch(`${API_URL}/${id}?${queryParams}`, {
       method: 'PUT',
       headers: {
-        'Content-Type': 'application/json', // Ensure the content type is application/json
+        'Content-Type': 'application/json',
       },
-      body: JSON.stringify(employeeData), // Send the employee data as JSON
+      body: JSON.stringify(employeeData), 
     });
-
-    if (!response.ok) {
-      // If not 2xx, throw an error with response body
-      const errorDetails = await response.json();
-      console.error("Error details from server:", errorDetails);
-      throw new Error("Failed to update employee data.");
+    
+     if (!response.ok) {
+      throw new Error(`Failed to update employee. Status: ${response.status}`);
     }
 
     return await response.json();

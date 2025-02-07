@@ -66,17 +66,14 @@ const Home = () => {
       setEmployee((prevEmployees) => prevEmployees.filter((emp) => emp.id !== deleteId));
       handleCloseModal();
 
-      if (response.ok) {
-        const data = await previewEmployees();
-        setEmployee(data.employees || []);
-        handleCloseModal();  
-      }
-
     } catch (error) {
       console.error("Error deleting employee:", error);
       setError("An error occurred while deleting the employee.");
       handleCloseModal();
     }
+
+    const data = await previewEmployees();
+    setEmployee(data.employees || []);
   };
   
   const handleEditClick = (id) => {
