@@ -21,7 +21,6 @@ import {
   AlertDialogFooter,
   AlertDialogHeader,
   AlertDialogTitle,
-  AlertDialogTrigger,
 } from "@/components/ui/user";
 
 import { MoreVertical } from "lucide-react";
@@ -49,7 +48,7 @@ const Home = () => {
   }, []);
   
   const handleDeleteClick = (id) => {
-    setDeleteId(id);  // Set deleteId when opening the modal
+    setDeleteId(id);
     setOpen(true); 
   };
   

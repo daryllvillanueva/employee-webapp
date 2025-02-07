@@ -1,4 +1,3 @@
-// employeeService.js
 
 const API_URL = 'https://localhost:7111/Employees';
 const HOME_API_URL = 'https://localhost:7111/Home';

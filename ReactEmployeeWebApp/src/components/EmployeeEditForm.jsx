@@ -39,7 +39,7 @@ const EmployeeEditForm = () => {
     if (name === 'salary') {
       setEmployeeData((prevData) => ({
         ...prevData,
-        [name]: Number(parseFloat(value).toFixed(2)) || 0
+        [name]: Number(parseFloat(value).toFixed(2))
       }));
     } else {
       setEmployeeData((prevData) => ({
